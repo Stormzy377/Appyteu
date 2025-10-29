@@ -1,12 +1,21 @@
 import { sql } from "../database/Connect.js";
 
 class User {
-  check() {}
+  async check() {}
 
-  create() {}
+  async create(user) {
+    const { name, email, password } = user;
+    await sql`insert into users (name, email, password_hash, created_at) values (${name}, ${email}, ${password}, ${Date.now()})`;
+  }
 
-  show() {}
-  update() {}
+  async show() {}
+  async find(email) {
+    this.user = await sql`select * from users where email = ${email}`;
+    return this.user;
+  }
+  async update() {}
 
-  destroy() {}
+  async destroy() {}
 }
+
+export default new User();
