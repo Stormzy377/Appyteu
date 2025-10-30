@@ -43,7 +43,7 @@ class UserController {
     } catch (error) {
       console.log(error);
       return response.status(500).json({
-        message: `Ocorreu algum erro `,
+        message: `Erro de servidor! `,
       });
     }
   }
@@ -80,7 +80,28 @@ class UserController {
   }
 
   static async show(request, response) {
-    response.send(`Mostrando usuário com ID ${response.params.id}`);
+    try {
+      const { id } = request.params;
+
+      const user = await User.show(id);
+
+      if (user.length === 0) {
+        return response.status(404).json({
+          message: "Usuário não encontrado!",
+        });
+      }
+      const { password_hash, ...data } = user[0];
+
+      return response.status(200).json({
+        message: "Usuário encontrado com sucesso!",
+        data,
+      });
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({
+        message: `Erro de servidor! `,
+      });
+    }
   }
 }
 export default UserController;

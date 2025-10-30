@@ -6,7 +6,14 @@ class User {
     await sql`insert into users (name, email, password_hash, created_at) values (${name}, ${email}, ${hash}, ${Date.now()})`;
   }
 
-  async show() {}
+  async show(id) {
+    const user = await sql`select * from users where id = ${id}`;
+
+    if (user.length === 0) {
+      throw new Error("Sem usuários correspondentes");
+    }
+    return user;
+  }
   async find(email) {
     this.user = await sql`select * from users where email = ${email}`;
     return this.user;

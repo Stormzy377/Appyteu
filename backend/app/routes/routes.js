@@ -5,5 +5,6 @@ import UserController from "../controllers/UserController.js";
 // User Routes
 router.post("/add", UserController.create);
 router.post("/login", UserController.check);
+router.get("/show/:id", UserController.show);
 
 export default router;
