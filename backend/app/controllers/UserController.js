@@ -107,18 +107,68 @@ class UserController {
   }
 
   static async seeOne(request, response) {
-    const { search } = request.query;
+    try {
+      const { search } = request.query;
 
-    const user = await User.search(search);
-    if (user.length === 0) {
-      return response.status(404).json({
-        message: "Nenhum usuário encontrado!",
+      const user = await User.search(search);
+      if (user.length === 0) {
+        return response.status(404).json({
+          message: "Nenhum usuário encontrado!",
+        });
+      }
+      return response.status(200).json({
+        message: "Usuário encontrado com sucesso!",
+        user,
+      });
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({
+        message: `Erro de servidor! `,
       });
     }
-    return response.status(200).json({
-      message: "Usuário encontrado com sucesso!",
-      user,
-    });
+  }
+
+  static async update(request, response) {
+    try {
+      const { id } = request.params;
+      const { name, email, role, preferences } = request.body;
+
+      const user = await User.update(id, {
+        name,
+        email,
+        role,
+        preferences,
+      });
+      return response.status(200).json({
+        message: "Usuário actualizado com sucesso!",
+      });
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({
+        message: `Erro de servidor! `,
+      });
+    }
+  }
+
+  static async destroy(request, response) {
+    try {
+      const { id } = request.params;
+
+      const user = await User.destroyUser(id);
+      if (!user) {
+        return response.status(404).json({
+          message: "Falha ao apagar usuário!",
+        });
+      }
+      return response.status(200).json({
+        message: "Usuário apagado com sucesso!",
+      });
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({
+        message: `Erro de servidor! `,
+      });
+    }
   }
 }
 export default UserController;
