@@ -50,7 +50,7 @@ class UserController {
 
   static async create(request, response) {
     try {
-      const { name, email, password } = request.body;
+      const { name, email, password, role, preferences } = request.body;
       const existingUser = await User.find(email);
 
       if (existingUser.length > 0) {
@@ -66,6 +66,8 @@ class UserController {
         name,
         email,
         hash,
+        role,
+        preferences,
       });
 
       return response.status(201).json({
@@ -102,6 +104,21 @@ class UserController {
         message: `Erro de servidor! `,
       });
     }
+  }
+
+  static async seeOne(request, response) {
+    const { search } = request.query;
+
+    const user = await User.search(search);
+    if (user.length === 0) {
+      return response.status(404).json({
+        message: "Nenhum usuário encontrado!",
+      });
+    }
+    return response.status(200).json({
+      message: "Usuário encontrado com sucesso!",
+      user,
+    });
   }
 }
 export default UserController;

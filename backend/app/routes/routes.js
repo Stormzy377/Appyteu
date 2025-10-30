@@ -6,5 +6,6 @@ import UserController from "../controllers/UserController.js";
 router.post("/add", UserController.create);
 router.post("/login", UserController.check);
 router.get("/show/:id", UserController.show);
+router.get("/see", UserController.seeOne);
 
 export default router;
